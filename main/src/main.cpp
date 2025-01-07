@@ -1,5 +1,6 @@
+#define _USE_MATH_DEFINES
+
 #include <math.h>
-#include <vecLib/vecLib.h>
 
 #include <algorithm>
 #include <condition_variable>
@@ -17,8 +18,6 @@
 #ifdef RELEASE
 #define EIGEN_NO_DEBUG
 #endif
-
-#include <Accelerate/Accelerate.h>
 
 #include "../../math/formulas.h"
 #include "../../math/master_equation.h"

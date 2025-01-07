@@ -1,6 +1,6 @@
 #ifndef FORMULAS_H
 #define FORMULAS_H
-
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 #include <iostream>
