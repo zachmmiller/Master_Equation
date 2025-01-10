@@ -311,7 +311,7 @@ int main(int argc, char** argv) {
             N_0 *= initial_integral_abundance;
         }
 
-        if (initially_boltzmann && !save_boltzmann) {
+        if (initially_boltzmann) {
             Boltzmann(reinterpret_cast<std::complex<double>*>(N_0.data()), n_e_bins, e_min, e_step, vib_modes.data(), vib_degen.data(), vib_modes.size(), initial_temperature);
             N_0 *= initial_integral_abundance;
         }
