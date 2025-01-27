@@ -61,6 +61,15 @@ int Lua_Load_Bool(lua_State* L, bool* out) {
     }
 }
 
+int Lua_Load_String(lua_State* L, std::string* out) {
+    if (lua_isstring(L, -1)) {
+        *out = std::string(lua_tostring(L, -1));
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 //
 // Explicit template instantiations
 // You must add to this list if you want additional templates

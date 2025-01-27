@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include <filesystem>
+#include <string>
 #include <vector>
 
 #include "../vendor/Lua/src/lua.hpp"
@@ -17,5 +18,7 @@ template <typename T>
 int Lua_Load_Number(lua_State* L, T* out);
 
 int Lua_Load_Bool(lua_State* L, bool* out);
+
+int Lua_Load_String(lua_State* L, std::string* out);
 
 #endif

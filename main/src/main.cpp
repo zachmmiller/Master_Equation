@@ -67,19 +67,44 @@ int main(int argc, char** argv) {
     }
     std::cout << "config file: " << config_file << std::endl;
 
+    std::string output_directory_str;
+    fs::path output_directory;
     double t_min, t_max, t_step, temperature, initial_temperature, initial_integral_abundance;
     int e_min, e_max, e_step, e0, number_of_threads;
     std::vector<int> vib_modes, vib_degen, TS_vib_modes, TS_vib_degen;
     std::vector<double> ir_intens;
-    bool initially_boltzmann, no_RRKM, save_initial_condition, save_bins, save_boltzmann, save_time_data;
+    bool initially_boltzmann, no_RRKM, save_initial_condition, save_bins, save_modes, save_boltzmann, save_time_data, save_eigenvalues;
     lua_State* L = luaL_newstate();
     {
         std::cout << "\nLoading configuration..." << std::endl;
         Timer timer("Took");
         luaL_openlibs(L);
-        if (luaL_dofile(L, config_file.string().c_str()) != LUA_OK) {
-            std::cout << "Error opening file" << std::endl;
+
+        fs::path cwd(fs::canonical("."));
+        if (luaL_dostring(L, std::format("current_working_directory = \"{}\"", cwd.string().c_str()).c_str()) != LUA_OK) {
+            std::cout << "Error setting current working directory. Message:" << std::endl;
+            std::cout << lua_tostring(L, -1) << std::endl;
             lua_close(L);
+            return 1;
+        }
+
+        if (luaL_dostring(L, std::format("config_directory = \"{}\"", config_file.parent_path().string().c_str()).c_str()) != LUA_OK) {
+            std::cout << "Error setting config directory. Message:" << std::endl;
+            std::cout << lua_tostring(L, -1) << std::endl;
+            lua_close(L);
+            return 1;
+        }
+
+        if (luaL_dofile(L, config_file.string().c_str()) != LUA_OK) {
+            std::cout << "Error running config file. Message:" << std::endl;
+            std::cout << lua_tostring(L, -1) << std::endl;
+            lua_close(L);
+            return 1;
+        }
+
+        lua_getglobal(L, "output_directory");
+        if (Lua_Load_String(L, &output_directory_str)) {
+            std::cout << "Required parameter \"output_directory\" not found. Exiting." << std::endl;
             return 1;
         }
 
@@ -185,6 +210,12 @@ int main(int argc, char** argv) {
             return 1;
         }
 
+        lua_getglobal(L, "save_modes");
+        if (Lua_Load_Bool(L, &save_modes)) {
+            std::cout << "Required parameter \"save_modes\" not found. Exiting." << std::endl;
+            return 1;
+        }
+
         lua_getglobal(L, "save_bins");
         if (Lua_Load_Bool(L, &save_bins)) {
             std::cout << "Required parameter \"save_bins\" not found. Exiting." << std::endl;
@@ -203,6 +234,12 @@ int main(int argc, char** argv) {
             return 1;
         }
 
+        lua_getglobal(L, "save_eigenvalues");
+        if (Lua_Load_Bool(L, &save_eigenvalues)) {
+            std::cout << "Required parameter \"save_eigenvalues\" not found. Exiting." << std::endl;
+            return 1;
+        }
+
         lua_getglobal(L, "save_time_data");
         if (Lua_Load_Bool(L, &save_time_data)) {
             std::cout << "Required parameter \"save_time_data\" not found. Exiting." << std::endl;
@@ -214,6 +251,12 @@ int main(int argc, char** argv) {
             std::cout << "Required parameter \"number_of_threads\" not found. Exiting." << std::endl;
             return 1;
         }
+    }
+
+    output_directory = fs::canonical(output_directory_str);
+    if (!fs::is_directory(output_directory)) {
+        std::cout << "Output directory is not valid. Exiting." << std::endl;
+        return 1;
     }
 
     if (vib_modes.size() != vib_degen.size() || vib_degen.size() != ir_intens.size()) {
@@ -234,7 +277,7 @@ int main(int argc, char** argv) {
         for (int& i : TS_vib_degen) {
             n_TS_modes += i;
         }
-        if (n_TS_modes != n_modes - 1) {
+        if (n_TS_modes != n_modes - 1 && !no_RRKM) {
             std::cout << "Warning: The number of transition state vibrational modes should\nbe one less than the number of reactant complex vibrational modes.\n" << std::endl;
         }
     }
@@ -245,13 +288,35 @@ int main(int argc, char** argv) {
     Vibrational_Modes modes(vib_modes.data(), vib_degen.data(), ir_intens.data(), temperature, vib_modes.size());
 
     if (verbose) {
+        std::cout << "Blackbody field temperature: " << temperature << " K" << std::endl;
+        std::cout << "Initial temperature: " << initial_temperature << " K" << std::endl;
+
         modes.print();
     }
 
-    if (save_time_data || save_boltzmann) {
-        if (!fs::exists(folder)) {
-            fs::create_directory(folder);
+    if (save_modes) {
+        std::cout << "Saving vibrational modes..." << std::endl;
+        Timer timer("Took");
+        fs::path outpath(output_directory / "modes.csv");
+        std::ofstream outfile;
+        outfile.open(outpath);
+        std::string out_str("Index, mode (cm^-1), degeneracy, IR intensity (km/mol), A (s^-1), B (cm^3 * J^-1 * s^-2), P (J * s * cm^-3), B * P (s^-1)\n");
+        outfile << out_str;
+        for (int i = 0; i < modes.N; i++) {
+            out_str.clear();
+            out_str += std::format("{:10d}, {:10d}, {:10d}, {:18.15f}, {:18.15f}, {:18.15e}, {:18.15f}, {:18.15f}",
+                                   i,
+                                   modes.C[i],
+                                   modes.D[i],
+                                   modes.I[i],
+                                   modes.A[i],
+                                   modes.B[i],
+                                   modes.P[i],
+                                   modes.B[i] * modes.P[i]) +
+                       "\n";
+            outfile << out_str;
         }
+        outfile << out_str;
     }
 
     // These are all of the linear algebra things we need.
@@ -280,7 +345,7 @@ int main(int argc, char** argv) {
     if (save_bins) {
         std::cout << "Saving bins..." << std::endl;
         Timer timer("Took");
-        fs::path outpath(folder / "bins.csv");
+        fs::path outpath(output_directory / "bins.csv");
         std::ofstream outfile;
         outfile.open(outpath);
         std::string out_str;
@@ -297,7 +362,7 @@ int main(int argc, char** argv) {
 
         if (save_boltzmann) {
             Boltzmann(reinterpret_cast<std::complex<double>*>(N_0.data()), n_e_bins, e_min, e_step, vib_modes.data(), vib_degen.data(), vib_modes.size(), temperature);
-            fs::path outpath(folder / "boltzmann.csv");
+            fs::path outpath(output_directory / "boltzmann.csv");
             std::ofstream outfile;
             outfile.open(outpath);
             std::string out_str;
@@ -317,6 +382,7 @@ int main(int argc, char** argv) {
         }
 
         if (!initially_boltzmann) {
+            double sum = 0;
             for (int i = 0; i < n_e_bins; i++) {
                 lua_getglobal(L, "initial_population");
                 lua_pushnumber(L, i);
@@ -329,12 +395,18 @@ int main(int argc, char** argv) {
                     return 1;
                 }
                 N_0.data()[i] = std::complex<double>(lua_tonumber(L, -1), 0);
+                sum += N_0.data()[i].real();
                 lua_pop(L, 1);
+            }
+
+            // Normalize and scale to initial_integral_abundance
+            for (int i = 0; i < n_e_bins; i++) {
+                N_0.data()[i] = std::complex<double>(initial_integral_abundance * N_0.data()[i].real() / sum, 0);
             }
         }
 
         if (save_initial_condition) {
-            fs::path outpath(folder / "initial_condition.csv");
+            fs::path outpath(output_directory / "initial_condition.csv");
             std::ofstream outfile;
             outfile.open(outpath);
             std::string out_str;
@@ -432,6 +504,21 @@ int main(int argc, char** argv) {
         e_vec_inv = e_vec.inverse();
     }
 
+    if (save_eigenvalues) {
+        std::cout << "Saving eigenvalues..." << std::endl;
+        Timer timer("Took");
+        fs::path outpath(output_directory / "eigenvalues.csv");
+        std::ofstream outfile;
+        outfile.open(outpath);
+        std::string out_str("Real component, Imaginary component");
+        outfile << out_str;
+        for (int i = 0; i < n_e_bins; i++) {
+            out_str.clear();
+            out_str += std::format("{:18d}, {:18.15f}, {:18.15f}\n", i, e_val.data()[i].real(), e_val.data()[i].imag());
+            outfile << out_str;
+        }
+    }
+
     N_0 = e_vec_inv * N_0;
 
     // Uncomment this to remove long term decay / growth of the population that is likely due to floating point rounding in the transport matrix.
@@ -444,7 +531,7 @@ int main(int argc, char** argv) {
     */
 
     if (save_time_data) {
-        fs::path outpath(folder / "time_data.csv");
+        fs::path outpath(output_directory / "time_data.csv");
         std::ofstream outfile;
         outfile.open(outpath);
 
@@ -466,12 +553,12 @@ int main(int argc, char** argv) {
             N_t = lam_mat * N_0;
             N_t = e_vec * N_t;
 
-            // Below is equivalent to what is going on above, but this way of doing it is much slower.
+            // Below is equivalent to what is going on above, but is way of doing it is much slower.
             // N_t = e_vec * lam_mat * e_vec_inv * N_0;
 
             if (save_time_data) {
                 out_str.clear();
-                out_str += std::format("{:18.15f}, ", time);  // format: 16 is the length (in chars) and .15f is the precision
+                out_str += std::format("{:18.15f}, ", time);  // format: 18 is the length (in chars) and .15f is the precision
                 double value = 0;
                 for (int j = 0; j < n_e_bins; j++) {
                     value = sqrt(N_t.data()[j].real() * N_t.data()[j].real() + N_t.data()[j].imag() * N_t.data()[j].imag());
