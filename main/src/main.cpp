@@ -300,11 +300,12 @@ int main(int argc, char** argv) {
         fs::path outpath(output_directory / "modes.csv");
         std::ofstream outfile;
         outfile.open(outpath);
-        std::string out_str("Index, mode (cm^-1), degeneracy, IR intensity (km/mol), A (s^-1), B (cm^3 * J^-1 * s^-2), P (J * s * cm^-3), B * P (s^-1)\n");
+        std::string out_str(
+            "       Index, mode (cm^-1),   degeneracy,     IR intensity (km/mol),                  A (s^-1),    B (cm^3 * J^-1 * s^-2),         P (J * s * cm^-3),              B * P (s^-1)\n");
         outfile << out_str;
         for (int i = 0; i < modes.N; i++) {
             out_str.clear();
-            out_str += std::format("{:10d}, {:10d}, {:10d}, {:18.15f}, {:18.15f}, {:18.15e}, {:18.15f}, {:18.15f}",
+            out_str += std::format("{:12d}, {:12d}, {:12d}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}",
                                    i,
                                    modes.C[i],
                                    modes.D[i],
@@ -316,7 +317,6 @@ int main(int argc, char** argv) {
                        "\n";
             outfile << out_str;
         }
-        outfile << out_str;
     }
 
     // These are all of the linear algebra things we need.
@@ -341,20 +341,6 @@ int main(int argc, char** argv) {
 
     // Propagator (e^-lambda*t as a diagonal matrix)
     Eigen::Matrix<std::complex<double>, -1, -1, STORAGE_ORDER> lam_mat = Eigen::Matrix<std::complex<double>, -1, -1, STORAGE_ORDER>::Zero(n_e_bins, n_e_bins);
-
-    if (save_bins) {
-        std::cout << "Saving bins..." << std::endl;
-        Timer timer("Took");
-        fs::path outpath(output_directory / "bins.csv");
-        std::ofstream outfile;
-        outfile.open(outpath);
-        std::string out_str;
-        for (int i = 0; i < n_e_bins; i++) {
-            out_str.clear();
-            out_str += std::format("{:8d}\n", e_step * i + e_min);
-            outfile << out_str;
-        }
-    }
 
     {
         std::cout << "Calculating initial population..." << std::endl;
@@ -510,11 +496,16 @@ int main(int argc, char** argv) {
         fs::path outpath(output_directory / "eigenvalues.csv");
         std::ofstream outfile;
         outfile.open(outpath);
-        std::string out_str("Real component, Imaginary component");
+        std::string out_str("     Index,            Real component,       Imaginary component,                 Magnitude\n");
         outfile << out_str;
         for (int i = 0; i < n_e_bins; i++) {
             out_str.clear();
-            out_str += std::format("{:18d}, {:18.15f}, {:18.15f}\n", i, e_val.data()[i].real(), e_val.data()[i].imag());
+            out_str += std::format("{:10d}, {:25.15e}, {:25.15e}, {:25.15e}\n",
+                                   i,
+                                   e_val.data()[i].real(),
+                                   e_val.data()[i].imag(),
+                                   sqrt(e_val.data()[i].real() * e_val.data()[i].real() + e_val.data()[i].imag() * e_val.data()[i].imag()));
+
             outfile << out_str;
         }
     }
@@ -538,7 +529,17 @@ int main(int argc, char** argv) {
         std::cout << "Time propagation..." << std::endl;
         Timer timer("Took");
         double time = 0;
-        std::string out_str;
+        std::string out_str("      row=time/col=energy, ");
+
+        for (int i = 0; i < n_e_bins; i++) {
+            out_str += std::format("{:25d}", e_min + e_step * i);
+            if (i < n_e_bins - 1) {
+                out_str += ", ";
+            }
+        }
+        out_str += "\n";
+        outfile << out_str;
+
         Progress_Bar bar(n_t_steps, 50, "");
         bar.Start();
         for (int i = 0; i < n_t_steps; i++) {
@@ -556,19 +557,18 @@ int main(int argc, char** argv) {
             // Below is equivalent to what is going on above, but is way of doing it is much slower.
             // N_t = e_vec * lam_mat * e_vec_inv * N_0;
 
-            if (save_time_data) {
-                out_str.clear();
-                out_str += std::format("{:18.15f}, ", time);  // format: 18 is the length (in chars) and .15f is the precision
-                double value = 0;
-                for (int j = 0; j < n_e_bins; j++) {
-                    value = sqrt(N_t.data()[j].real() * N_t.data()[j].real() + N_t.data()[j].imag() * N_t.data()[j].imag());
-                    out_str += std::format("{:18.15f}", value);
-                    if (j < n_e_bins - 1) {
-                        out_str += ", ";
-                    }
+            out_str.clear();
+            out_str += std::format("{:25.15f}, ", time);  // format: 25 is the length (in chars) and .15f is the precision
+            double value = 0;
+            for (int j = 0; j < n_e_bins; j++) {
+                value = sqrt(N_t.data()[j].real() * N_t.data()[j].real() + N_t.data()[j].imag() * N_t.data()[j].imag());
+                out_str += std::format("{:25.15f}", value);
+                if (j < n_e_bins - 1) {
+                    out_str += ", ";
                 }
-                outfile << out_str << "\n";
             }
+            outfile << out_str << "\n";
+
             bar.Update();
         }
         bar.End();

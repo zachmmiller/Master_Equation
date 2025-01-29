@@ -31,7 +31,7 @@ struct Timer {
     const char* message;
     const char* task_name;
     unsigned int n_tasks;
-    std::chrono::time_point<std::chrono::steady_clock> start, end;
+    std::chrono::high_resolution_clock::time_point start, end;
     std::chrono::duration<float> duration;
 };
 

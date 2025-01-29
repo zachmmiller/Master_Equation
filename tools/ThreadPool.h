@@ -6,6 +6,7 @@
 #define THREADPOOL_H
 
 #include <complex>
+#include <condition_variable>
 #include <functional>
 #include <mutex>
 #include <queue>

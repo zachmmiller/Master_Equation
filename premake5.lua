@@ -6,7 +6,7 @@ removefiles{"vendor/Lua/src/lua.c", "vendor/Lua/src/luac.c"}
 language "C++"
 cppdialect "C++20"
 toolset "clang"
-buildoptions {"-Wall", "-mcpu=native", "-march=native"}
+buildoptions {"-Wall", "-march=native"}
 links {}
 -- "-fopenmp for compiler", "omp" for linker
 targetdir "bin"
