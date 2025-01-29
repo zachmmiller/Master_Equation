@@ -285,22 +285,23 @@ int main(int argc, char** argv) {
         std::cout << "Blackbody field temperature: " << temperature << " K" << std::endl;
         std::cout << "Initial temperature: " << initial_temperature << " K" << std::endl;
 
-        modes.print();
-    }
-
-    if (save_modes) {
-        std::cout << "Saving vibrational modes..." << std::endl;
-        Timer timer("Took");
-        fs::path outpath(output_directory / "modes.csv");
-        std::ofstream outfile;
-        outfile.open(outpath);
-        std::string out_str(
-            "       Index, mode (cm^-1),   degeneracy,     IR intensity (km/mol),                  A (s^-1),    B (cm^3 * J^-1 * s^-2),         P (J * s * cm^-3),              B * P (s^-1)\n");
-        outfile << out_str;
+        std::cout << "Vibrational modes:" << std::endl;
+        std::string out_str = std::format("{:>15}, {:>15}, {:>15}, {:>15}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}\n",
+                                          "Index",
+                                          "Type",
+                                          "mode (cm^-1)",
+                                          "degeneracy",
+                                          "IR intensity (km/mol)",
+                                          "A (s^-1)",
+                                          "B (cm^3 * J^-1 * s^-2)",
+                                          "P (J * s * cm^-3)",
+                                          "B * P (s^-1)");
+        std::cout << out_str;
         for (int i = 0; i < modes.N; i++) {
             out_str.clear();
-            out_str += std::format("{:12d}, {:12d}, {:12d}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}",
+            out_str += std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}",
                                    i,
+                                   "Reactant",
                                    modes.C[i],
                                    modes.D[i],
                                    modes.I[i],
@@ -309,6 +310,52 @@ int main(int argc, char** argv) {
                                    modes.P[i],
                                    modes.B[i] * modes.P[i]) +
                        "\n";
+            std::cout << out_str;
+        }
+        for (int i = 0; i < TS_vib_modes.size(); i++) {
+            out_str.clear();
+            out_str +=
+                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") + "\n";
+            std::cout << out_str;
+        }
+    }
+
+    if (save_modes) {
+        std::cout << "Saving vibrational modes..." << std::endl;
+        Timer timer("Took");
+        fs::path outpath(output_directory / "modes.csv");
+        std::ofstream outfile;
+        outfile.open(outpath);
+        std::string out_str = std::format("{:>15}, {:>15}, {:>15}, {:>15}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}\n",
+                                          "Index",
+                                          "Type",
+                                          "mode (cm^-1)",
+                                          "degeneracy",
+                                          "IR intensity (km/mol)",
+                                          "A (s^-1)",
+                                          "B (cm^3 * J^-1 * s^-2)",
+                                          "P (J * s * cm^-3)",
+                                          "B * P (s^-1)");
+        outfile << out_str;
+        for (int i = 0; i < modes.N; i++) {
+            out_str.clear();
+            out_str += std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}",
+                                   i,
+                                   "Reactant",
+                                   modes.C[i],
+                                   modes.D[i],
+                                   modes.I[i],
+                                   modes.A[i],
+                                   modes.B[i],
+                                   modes.P[i],
+                                   modes.B[i] * modes.P[i]) +
+                       "\n";
+            outfile << out_str;
+        }
+        for (int i = 0; i < TS_vib_modes.size(); i++) {
+            out_str.clear();
+            out_str +=
+                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") + "\n";
             outfile << out_str;
         }
     }
@@ -345,12 +392,13 @@ int main(int argc, char** argv) {
             fs::path outpath(output_directory / "boltzmann.csv");
             std::ofstream outfile;
             outfile.open(outpath);
-            std::string out_str;
+            std::string out_str = std::format("{:>15}, {:>25}\n", "Energy (cm^-1)", "Abundance");
+            outfile << out_str;
             double value;
             for (int i = 0; i < n_e_bins; i++) {
                 out_str.clear();
                 value = sqrt(N_0.data()[i].real() * N_0.data()[i].real() + N_0.data()[i].imag() * N_0.data()[i].imag());
-                out_str += std::format("{:18.15f}\n", value);
+                out_str += std::format("{:15d}, {:25.15f}\n", e_min + i * e_step, value);
                 outfile << out_str;
             }
             N_0 *= initial_integral_abundance;
@@ -389,12 +437,13 @@ int main(int argc, char** argv) {
             fs::path outpath(output_directory / "initial_condition.csv");
             std::ofstream outfile;
             outfile.open(outpath);
-            std::string out_str;
+            std::string out_str = std::format("{:>15}, {:>25}\n", "Energy (cm^-1)", "Abundance");
+            outfile << out_str;
             double value;
             for (int i = 0; i < n_e_bins; i++) {
                 out_str.clear();
                 value = sqrt(N_0.data()[i].real() * N_0.data()[i].real() + N_0.data()[i].imag() * N_0.data()[i].imag());
-                out_str += std::format("{:18.15f}\n", value);
+                out_str += std::format("{:15d}, {:25.15f}\n", e_min + i * e_step, value);
                 outfile << out_str;
             }
         }
@@ -490,11 +539,11 @@ int main(int argc, char** argv) {
         fs::path outpath(output_directory / "eigenvalues.csv");
         std::ofstream outfile;
         outfile.open(outpath);
-        std::string out_str("     Index,            Real component,       Imaginary component,                 Magnitude\n");
+        std::string out_str = std::format("{:>15}, {:>25}, {:>25}, {:>25}\n", "Index", "Real component", "Imaginary component", "Magnitude");
         outfile << out_str;
         for (int i = 0; i < n_e_bins; i++) {
             out_str.clear();
-            out_str += std::format("{:10d}, {:25.15e}, {:25.15e}, {:25.15e}\n",
+            out_str += std::format("{:15d}, {:25.15e}, {:25.15e}, {:25.15e}\n",
                                    i,
                                    e_val.data()[i].real(),
                                    e_val.data()[i].imag(),
@@ -523,7 +572,7 @@ int main(int argc, char** argv) {
         std::cout << "Time propagation..." << std::endl;
         Timer timer("Took");
         double time = 0;
-        std::string out_str("      row=time/col=energy, ");
+        std::string out_str = std::format("{:>25}, ", "row=time/col=energy");
 
         for (int i = 0; i < n_e_bins; i++) {
             out_str += std::format("{:25d}", e_min + e_step * i);
