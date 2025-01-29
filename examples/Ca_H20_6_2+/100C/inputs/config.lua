@@ -3,7 +3,7 @@ dofile("/Users/zachmiller/Programming/C++/Master-Equation/lua_libraries/csv.lua"
 
 e_min = 0 -- wavenumber
 e_max = 20000
-e_step = 4000
+e_step = 20
 
 t_min = 1 -- seconds
 t_max = 2
@@ -30,7 +30,6 @@ no_RRKM = false
 
 save_modes = true
 save_initial_condition = true
-save_bins = true
 save_boltzmann = true
 save_eigenvalues = true
 save_time_data = true

@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
     int e_min, e_max, e_step, e0, number_of_threads;
     std::vector<int> vib_modes, vib_degen, TS_vib_modes, TS_vib_degen;
     std::vector<double> ir_intens;
-    bool initially_boltzmann, no_RRKM, save_initial_condition, save_bins, save_modes, save_boltzmann, save_time_data, save_eigenvalues;
+    bool initially_boltzmann, no_RRKM, save_initial_condition, save_modes, save_boltzmann, save_time_data, save_eigenvalues;
     lua_State* L = luaL_newstate();
     {
         std::cout << "\nLoading configuration..." << std::endl;
@@ -213,12 +213,6 @@ int main(int argc, char** argv) {
         lua_getglobal(L, "save_modes");
         if (Lua_Load_Bool(L, &save_modes)) {
             std::cout << "Required parameter \"save_modes\" not found. Exiting." << std::endl;
-            return 1;
-        }
-
-        lua_getglobal(L, "save_bins");
-        if (Lua_Load_Bool(L, &save_bins)) {
-            std::cout << "Required parameter \"save_bins\" not found. Exiting." << std::endl;
             return 1;
         }
 
