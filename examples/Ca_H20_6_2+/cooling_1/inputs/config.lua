@@ -28,15 +28,15 @@ initial_integral_abundance = 1 -- Sum of all abundance
 
 no_RRKM = false
 
-save_modes = true
-save_initial_condition = true
-save_boltzmann = true
-save_eigenvalues = true
-save_time_data = true
+save_modes = false
+save_initial_condition = false
+save_boltzmann = false
+save_eigenvalues = false
+save_time_data = false
 
 output_directory = config_directory .. "/../outputs"
 
-number_of_threads = 8
+number_of_threads = 30
 
 -- Scripting
 
