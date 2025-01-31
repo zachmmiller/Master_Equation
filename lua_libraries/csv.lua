@@ -34,14 +34,24 @@ local function parse_row(input, sep, pos)
 	end
 end
 
-function slice_csv(csv, col)
-  local sliced = {}
+function csv_col(csv, c)
+  local col = {}
 
   for i = 1, #csv, 1 do
-    sliced[#sliced+1] = csv[i][col]
+    col[#col+1] = csv[i][c]
   end
 
-  return sliced
+  return col
+end
+
+function csv_row(csv, r)
+  local row = {}
+
+  for i = 1, #csv[r], 1 do
+    row[#row+1] = csv[r][i]
+  end
+
+  return row
 end
 
 csv = {}

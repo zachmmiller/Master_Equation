@@ -5,7 +5,7 @@ e_min = 0 -- wavenumber
 e_max = 20000
 e_step = 20
 
-t_min = 1 -- seconds
+t_min = 0 -- seconds
 t_max = 2
 t_step = 0.001
 
@@ -13,12 +13,12 @@ temperature = 100 + 273.15 -- kelvin
 
 modes = csv.load(config_directory .. "/vibrations.csv", ",", true)
 
-vib_modes = slice_csv(modes, 1) -- wavenumber
-ir_intens = slice_csv(modes, 2) -- km/mol
-vib_degen = slice_csv(modes, 3) -- count
+vib_modes = csv_col(modes, 1) -- wavenumber
+ir_intens = csv_col(modes, 2) -- km/mol
+vib_degen = csv_col(modes, 3) -- count
 
-TS_vib_modes = slice_csv(modes, 1)
-TS_vib_degen = slice_csv(modes, 3)
+TS_vib_modes = csv_col(modes, 1)
+TS_vib_degen = csv_col(modes, 3)
 
 e0 = 7345 -- wavenumber
 

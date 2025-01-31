@@ -5,3 +5,7 @@
 *.d
 *.ds
 *Makefile
+*.exe
+*.csv
+meq
+

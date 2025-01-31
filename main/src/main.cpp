@@ -315,7 +315,8 @@ int main(int argc, char** argv) {
         for (int i = 0; i < TS_vib_modes.size(); i++) {
             out_str.clear();
             out_str +=
-                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") + "\n";
+                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i + modes.N, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") +
+                "\n";
             std::cout << out_str;
         }
     }
@@ -355,7 +356,8 @@ int main(int argc, char** argv) {
         for (int i = 0; i < TS_vib_modes.size(); i++) {
             out_str.clear();
             out_str +=
-                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") + "\n";
+                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i + modes.N, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") +
+                "\n";
             outfile << out_str;
         }
     }
