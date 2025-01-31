@@ -247,10 +247,12 @@ int main(int argc, char** argv) {
         }
     }
 
-    output_directory = fs::canonical(output_directory_str);
+    output_directory = fs::path(output_directory_str);
     if (!fs::is_directory(output_directory)) {
-        std::cout << "Output directory is not valid. Exiting." << std::endl;
-        return 1;
+        std::cout << "Output directory does not exist. Creating at ";
+        fs::create_directory(output_directory);
+        output_directory = fs::canonical(output_directory);
+        std::cout << output_directory.string().c_str() << "\n" << std::endl;
     }
 
     if (vib_modes.size() != vib_degen.size() || vib_degen.size() != ir_intens.size()) {
