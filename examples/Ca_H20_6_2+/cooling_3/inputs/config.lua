@@ -1,5 +1,5 @@
 -- require("io") -- uncomment to print stuff using "io.write()"
-dofile("/Users/zachmiller/Programming/C++/Master-Equation/lua_libraries/csv.lua")
+dofile(config_directory .. "/../../../../lua_libraries/csv.lua")
 
 e_min = 0 -- wavenumber
 e_max = 20000

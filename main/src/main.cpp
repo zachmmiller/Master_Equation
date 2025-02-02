@@ -56,8 +56,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    std::cout << "\nfolder: " << folder << std::endl;
-
     fs::path config_file;
     fs::directory_iterator files(folder);
     for (const fs::directory_entry& entry : files) {
@@ -65,7 +63,11 @@ int main(int argc, char** argv) {
             config_file = entry.path();
         }
     }
-    std::cout << "config file: " << config_file << std::endl;
+
+    if (verbose) {
+        std::cout << "\nInput folder: " << folder << std::endl;
+        std::cout << "Config file: " << config_file << std::endl;
+    }
 
     std::string output_directory_str;
     fs::path output_directory;
@@ -249,11 +251,10 @@ int main(int argc, char** argv) {
 
     output_directory = fs::path(output_directory_str);
     if (!fs::is_directory(output_directory)) {
-        std::cout << "Output directory does not exist. Creating at ";
+        std::cout << "Output directory does not exist. Creating at " << output_directory.string().c_str() << "\n" << std::endl;
         fs::create_directory(output_directory);
-        output_directory = fs::canonical(output_directory);
-        std::cout << output_directory.string().c_str() << "\n" << std::endl;
     }
+    output_directory = fs::canonical(output_directory);
 
     if (vib_modes.size() != vib_degen.size() || vib_degen.size() != ir_intens.size()) {
         std::cout << "Parameters vib_modes, vib_degen and ir_intens do not all have the same size. Exiting." << std::endl;
@@ -284,11 +285,9 @@ int main(int argc, char** argv) {
     Vibrational_Modes modes(vib_modes.data(), vib_degen.data(), ir_intens.data(), temperature, vib_modes.size());
 
     if (verbose) {
-        std::cout << "Blackbody field temperature: " << temperature << " K" << std::endl;
-        std::cout << "Initial temperature: " << initial_temperature << " K" << std::endl;
-
+        std::cout << "Simulation parameters from config file:\n\n";
         std::cout << "Vibrational modes:" << std::endl;
-        std::string out_str = std::format("{:>15}, {:>15}, {:>15}, {:>15}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}\n",
+        std::string out_str = std::format("{:>10} {:>12} {:>14} {:>12} {:>23} {:>13} {:>24} {:>19} {:>13}\n",
                                           "Index",
                                           "Type",
                                           "mode (cm^-1)",
@@ -301,7 +300,7 @@ int main(int argc, char** argv) {
         std::cout << out_str;
         for (int i = 0; i < modes.N; i++) {
             out_str.clear();
-            out_str += std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}, {:25.15e}",
+            out_str += std::format("{:10d} {:>12} {:14d} {:12d} {:23.5e} {:13.5e} {:24.5e} {:19.5e} {:13.5e}",
                                    i,
                                    "Reactant",
                                    modes.C[i],
@@ -317,10 +316,26 @@ int main(int argc, char** argv) {
         for (int i = 0; i < TS_vib_modes.size(); i++) {
             out_str.clear();
             out_str +=
-                std::format("{:15d}, {:>15}, {:15d}, {:15d}, {:>25}, {:>25}, {:>25}, {:>25}, {:>25}", i + modes.N, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") +
-                "\n";
+                std::format("{:10d} {:>12} {:14d} {:12d} {:>23} {:>13} {:>24} {:>19} {:>13}", i + modes.N, "Transition", TS_vib_modes[i], TS_vib_degen[i], "n/a", "n/a", "n/a", "n/a", "n/a") + "\n";
             std::cout << out_str;
         }
+        std::cout << "\nTransport matrix parameters:\n";
+        std::cout << std::format("Energy bins min, max, step: {:d} cm^-1, {:d} cm^-1, {:d} cm^-1\n", e_min, e_max, e_step);
+        std::cout << std::format("Blackbody field temperature: {:.2f} K\n", temperature);
+        std::cout << std::format("\nActivation energy: {:d} cm^-1. Transport matrix RRKM rate constants are {}.\n", e0, no_RRKM ? "disabled" : "enabled");
+        std::cout << std::format("Number of threads for populating the transport matrix: {:d}\n", number_of_threads);
+
+        std::cout << "\nTime propagation:\n";
+        std::cout << std::format("Time min, max, step: {:5.3e} s, {:5.3e} s, {:5.3e} s\n", t_min, t_max, t_step);
+        std::cout << std::format("The initial population is a {}.\n", initially_boltzmann ? std::format("{:.2f} K Boltzmann distribution", initial_temperature) : "user defined distribution");
+
+        std::cout << "\nOutputs:\n";
+        std::cout << std::format("Output directory: {}\nData that will be saved:\n", output_directory.string());
+        std::cout << std::format("Modes: {}\n", save_modes ? "yes" : "no");
+        std::cout << std::format("Initial condition: {}\n", save_initial_condition ? "yes" : "no");
+        std::cout << std::format("Boltzmann (T={:.2f} K): {}\n", temperature, save_boltzmann ? "yes" : "no");
+        std::cout << std::format("Eigenvalues: {}\n", save_eigenvalues ? "yes" : "no");
+        std::cout << std::format("Time propagation: {}\n", save_time_data ? "yes" : "no");
     }
 
     if (save_modes) {
