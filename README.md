@@ -1,7 +1,7 @@
 # Master Equation (MEQ) Usage + Compilation Instructions
 
 # Usage
-MEQ is configured with one text file that defines all required variables. This file must be named “config.lua” for the program to recognize it and it must be formatted for the Lua programming language. Below is a list of all required variables with a brief description.
+MEQ is configured with one text file that defines all required variables. This file must be named “config.lua” for the program to recognize it and it must be formatted for the Lua programming language.
 
 ## Required variables
 Below is a list of all required variables for running MEQ that have to be defined somehow in the config.lua file. Names are case sensitive.  
@@ -34,7 +34,13 @@ Below is a list of all required variables for running MEQ that have to be define
     Activation energy. Given in wavenumber (cm-1).
 
  - initially_boltzmann. 
-    Boolean. Dictates whether the initial population is a Boltzmann distribution (set to true) or user defined (set to false). If set to false, a Lua function named initial_population(index) must be defined. See below for more detail. 
+    Boolean. Dictates whether the initial population is a Boltzmann distribution (set to true) or user defined (set to false). If set to false, a Lua function named initial_population(index) must be defined. See below for more detail.
+ 
+ - initial_temperature. 
+    Temperature of the inital Boltzmann distribution. Given in Kelvin. Not used if initially_boltzmann is set to false.
+
+ - initial_integral_abundance. 
+    Sets the value that the initial population is normalized to.
 
  - initial_population(index). 
     This function is defined by the user and called from C++. The integer parameter is the index of the array in C++, so it starts at 0 and ends at N-1. Remember that Lua arrays start at 1, so if you are loading data in from a .csv in Lua and passing it to C++ via this function, you will have to compensate by adding 1 to index. 
@@ -44,6 +50,9 @@ Below is a list of all required variables for running MEQ that have to be define
 
  - no_RRKM. 
     Boolean.Set to true to prevent the program from computing RRKM dissociation rate constants.
+
+ - output_directory.
+    String. Path to output folder.
 
  - save_modes. 
     Boolean. Set to true to save vibrational modes and other associated, computed values. These values include vibrational energy, infrared intensity, degeneracy, Einstein A coefficient, Einstein B coefficient, Planck Distribution and the Einstein B coefficient multiplied by the Planck Distribution. 
@@ -60,8 +69,10 @@ Below is a list of all required variables for running MEQ that have to be define
  - save_time_data. 
     Boolean. Set to true to save the time propagation data as a .csv file. The rows of the file correspond to each time point and the columns correspond to the energy bins. The first row is the values of the energy bins and the first column is the time for each point. 
 
+Note: Values given in wavenumber are stored in MEQ as integers, so floating point values will be truncated.
+
 ## Lua Libraries
-Loading .csv files for inputs to MEQ can be done with Lua. A file titled “csv.lua” is included with the source code of MEQ that includes functions for loading .csv files into 2D tables and slicing 2D tables into 1D tables. The functions are csv.load and csv_col/csv_row, respectively. These functions are imported using the dofile(filepath) function, which behaves essentially like import in Python.
+Loading .csv files for inputs can be done with Lua. A file titled “csv.lua” in the lua_libraries folder that includes functions for loading .csv files into 2D tables and slicing 2D tables into 1D tables. The functions are csv.load and csv_col/csv_row, respectively. These functions are imported using the dofile(filepath) function, which behaves essentially like import in Python.
 
  - csv.load(filename, delimiter, header). The filename parameter is a string that is the full path to the file. The delimiter parameter is a string that details how the columns of the csv are separated (“,”, “\t”, etc.). The header parameter is a boolean and details whether the first row is a header or not (if the first row is not actual data, set this parameter to true). The data is arranged in memory such that rows in the csv are contiguous blocks (i.e. indexing is done by “some_csv[row][column]”).
 
@@ -72,7 +83,7 @@ Loading .csv files for inputs to MEQ can be done with Lua. A file titled “csv.
 Note on loading .csv files: The file must be formatted such that there is a new line character (“\n”) after the last column of the last row. If that new line character is not there, you will get this error: "attempt to perform arithmetic on a nil value (local 'e')". To fix this, just open the .csv file in a plain text editor, press return on the last line, save and rerun MEQ.
 
 ## Additional symbols for scripting
-Lua does not contain a library for file system related tasks out of the box, so things like the current working directory and the directory of the config file are not easily accessible. To get around this, C++ defines these two variables at run time before the config file is run and they can be accessed as config_directory and current_working_directory in the config file. See examples for more detail.
+Lua does not contain a library for file system related tasks out of the box, so things like the current working directory and the directory of the config file are not easily accessible. To get around this, C++ defines these two variables at run time before the config file is run and they can be accessed as config_directory and current_working_directory in the config file. See examples for more detail. By 
 
 ## Python Libraries
 

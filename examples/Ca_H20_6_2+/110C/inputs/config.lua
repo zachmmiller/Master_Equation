@@ -62,11 +62,6 @@ for i, I in ipairs(ir_intens)
   do ir_intens[i] = I * ir_intens_scalar
   end
 
--- init_pop = slice_csv(csv.load(config_directory .. "/initial_population.csv", ",", false), 1)
 
-function initial_population(index)
-  energy = e_step * index + e_min
-  return energy
-end
 
 
