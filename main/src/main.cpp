@@ -83,14 +83,14 @@ int main(int argc, char** argv) {
         luaL_openlibs(L);
 
         fs::path cwd(fs::canonical("."));
-        if (luaL_dostring(L, std::format("current_working_directory = \"{}\"", cwd.string().c_str()).c_str()) != LUA_OK) {
+        if (luaL_dostring(L, std::format("current_working_directory = \"{}\"", cwd.generic_string().c_str()).c_str()) != LUA_OK) {
             std::cout << "Error setting current working directory. Message:" << std::endl;
             std::cout << lua_tostring(L, -1) << std::endl;
             lua_close(L);
             return 1;
         }
 
-        if (luaL_dostring(L, std::format("config_directory = \"{}\"", config_file.parent_path().string().c_str()).c_str()) != LUA_OK) {
+        if (luaL_dostring(L, std::format("config_directory = \"{}\"", config_file.parent_path().generic_string().c_str()).c_str()) != LUA_OK) {
             std::cout << "Error setting config directory. Message:" << std::endl;
             std::cout << lua_tostring(L, -1) << std::endl;
             lua_close(L);
