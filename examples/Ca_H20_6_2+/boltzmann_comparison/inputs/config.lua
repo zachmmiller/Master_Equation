@@ -5,9 +5,9 @@ e_min = 0 -- wavenumber
 e_max = 30000
 e_step = 5
 
-t_min = 100 -- seconds
-t_max = 101
-t_step = 0.5
+t_min = 0 -- seconds
+t_max = 100
+t_step = 1
 
 temperature = 400 + 273.15 -- kelvin
 
@@ -22,7 +22,7 @@ TS_vib_degen = csv_col(modes, 3)
 
 e0 = 7345 -- wavenumber
 
-initially_boltzmann = true
+initially_boltzmann = false
 initial_temperature = temperature
 initial_integral_abundance = 1 -- Sum of all abundance
 
