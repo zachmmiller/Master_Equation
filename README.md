@@ -78,7 +78,12 @@ Lua does not contain a library for file system related tasks out of the box, so 
 
 There are currently two scripts in the python_libraries directory. The first is importing.py, which provides some functions for plotting the outputs of this program and the second is rebin.py, which is a short script that will rebin a distribution given in eV (or any other unit of energy) to a distribution in wavenumber.
 
- - importing.py. There are functions three functions for loading saved time data, boltzmann distributions and initial conditions. All take one parameter, which is the folder that the saved data is in.
+ - importing.py. There are functions three functions for loading saved time data, boltzmann distributions and initial conditions. All functions take one parameter, which is the folder that the saved data is in.
+    - get_time_data loads in saved time propagation data and returns three numpy.ndarrays. The first is time (1D array), the second is energy (1D array) and the third is the abundance (2D array, first dimension is time and the second is energy).
+    - get_boltzmann loads in a saved boltzmann distribution and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
+    - get_initial_condition loads in a saved initial condition and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
+
+ - rebin.py. This is a script meant to be run from the command line. It takes 7 arguments and is used to  
 
 ## Examples
 
@@ -86,7 +91,7 @@ There are 10 examples configurations of the program in the examples directory th
 
 
 # Compiling
-It should be more or less straightforward to compile MEQ on any system if you have a C++ compiler that supports C++20 (GCC 9, Clang 14 or MSVC 16 / VS2019). Once you have the right compiler, all you need is Premake, which is a project file generator for building C/C++ code. Premake will generate a makefile or a visual studio build file by calling “premake5 gmake” or “premake5 vs2022”, respectively in the base directory of the source code. From there, you can move on to compile the code with either build system. To compile with make, just type “make config=release” in the base directory and the C/C++ compiler should do the thing. As of right now, compilation has been tested on Mac, Windows and Linux with LLVM Clang++.
+It should be more or less straightforward to compile MEQ on any system if you have a C++ compiler that supports C++20 (GCC 9, Clang 14 or MSVC 16 / VS2019). Once you have a compiler that supports C++20, the program is ready to build. You have a choice of using GNU make (makefiles are provided) or any other build system supported by premake5. Premake5 is a project file generator for building C/C++ code. Premake will generate makefiles or a visual studio build files by calling “premake5 gmake” or “premake5 vs2022”, respectively in the base directory of the source code. To compile with make, just type “make config=release” in the base directory and the C/C++ compiler should do the rest and put an executable in the bin directory. As of right now, compilation has been tested on Mac, Windows and Linux with LLVM Clang++, but GCC or MSVC should work without a problem. To request gcc for example, just change "toolset" in premake5.lua from "clang" to "gcc" and regenerate the build files.
 
 
 
