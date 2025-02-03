@@ -4,12 +4,13 @@
 
 #include "ThreadPool.h"
 
+#include <format>
 #include <iostream>
 
 void ThreadPool::Start(uint32_t n_threads, const std::function<void()>& start_task) {
     const uint32_t n_max_threads = std::thread::hardware_concurrency();  // Max # of threads the system supports
     if (n_max_threads < n_threads) {
-        std::cout << "ThreadPool warning: Specified number of threads (" << n_threads << ") exceeds system maximum (" << n_max_threads << "). Setting number of threads to system maximum."
+        std::cout << std::format("ThreadPool warning: Specified number of threads ({:d}) exceeds system maximum ({:d}). Setting number of threads to system maximum.\n", n_threads, n_max_threads)
                   << std::endl;
     }
     if (n_threads <= n_max_threads) {
