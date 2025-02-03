@@ -4,41 +4,61 @@
 MEQ is configured with one text file that defines all required variables. This file must be named “config.lua” for the program to recognize it and it must be formatted for the Lua programming language. Below is a list of all required variables with a brief description.
 
 ## Required variables
- - t_min, t_max, t_step. Simulation time minimum, maximum and step size, respectively. The list of simulated times includes the end points. Given in seconds.
+Below is a list of all required variables for running MEQ that have to be defined somehow in the config.lua file. Names are case sensitive.  
 
- - e_min, e_max, e_step. Simulation energy minimum, maximum and step size, respectively. The list of simulated energies includes the end points. Given in wavenumber (cm-1).
+ - t_min, t_max, t_step. 
+    Simulation time minimum, maximum and step size, respectively. The list of simulated times includes the end points. Given in seconds.
 
- - temperature. Temperature of the blackbody field. Given in Kelvin.
+ - e_min, e_max, e_step. 
+    Simulation energy minimum, maximum and step size, respectively. The list of simulated energies includes the end points. Given in wavenumber (cm-1).
 
- - vib_modes. Array of vibrational normal modes. Given in wavenumber (cm-1). Must be the same length as vib_degen and ir_intens.
+ - temperature. 
+    Temperature of the blackbody field. Given in Kelvin.
 
- - vib_degen. Array of vibrational normal mode degeneracies. These describe the degeneracy of each normal mode as an integer value. Must be the same length as vib_modes and ir_intens.
+ - vib_modes. 
+    Array of vibrational normal modes. Given in wavenumber (cm-1). Must be the same length as vib_degen and ir_intens.
 
- - ir_intens. Array of infrared intensities. Given in km/mol. Must be the same length as vib_modes and vib_degen.
+ - vib_degen. 
+    Array of vibrational normal mode degeneracies. These describe the degeneracy of each normal mode as an integer value. Must be the same length as vib_modes and ir_intens.
 
- - TS_vib_modes. Array of transition state normal modes. Given in wavenumber (cm-1). Must be the same length as TS_vib_degen.
+ - ir_intens. 
+    Array of infrared intensities. Given in km/mol. Must be the same length as vib_modes and vib_degen.
 
- - TS_vib_degen. Array of transition state normal mode degeneracies. These describe the degeneracy of each normal mode as an integer value. Must be the same length as TS_vib_modes.
+ - TS_vib_modes. 
+    Array of transition state normal modes. Given in wavenumber (cm-1). Must be the same length as TS_vib_degen.
 
- - e0. Activation energy. Given in wavenumber (cm-1).
+ - TS_vib_degen. 
+    Array of transition state normal mode degeneracies. These describe the degeneracy of each normal mode as an integer value. Must be the same length as TS_vib_modes.
 
- - initially_boltzmann. Boolean. Dictates whether the initial population is a Boltzmann distribution (set to true) or user defined (set to false). If set to false, a Lua function named initial_population(index) must be defined. See below for more detail. 
+ - e0. 
+    Activation energy. Given in wavenumber (cm-1).
 
- - initial_population(index). This function is defined by the user and called from C++. The integer parameter is the index of the array in C++, so it starts at 0 and ends at N-1.
+ - initially_boltzmann. 
+    Boolean. Dictates whether the initial population is a Boltzmann distribution (set to true) or user defined (set to false). If set to false, a Lua function named initial_population(index) must be defined. See below for more detail. 
 
- - number_of_threads. Integer. Sets the number of threads used when populating the transport matrix.
+ - initial_population(index). 
+    This function is defined by the user and called from C++. The integer parameter is the index of the array in C++, so it starts at 0 and ends at N-1. Remember that Lua arrays start at 1, so if you are loading data in from a .csv in Lua and passing it to C++ via this function, you will have to compensate by adding 1 to index. 
 
- - no_RRKM. Boolean. Set to true to prevent the program from computing RRKM dissociation rate constants.
+ - number_of_threads. 
+    Integer. Sets the number of threads used when populating the transport matrix.
 
- - save_modes. Boolean. Set to true to save vibrational modes and other associated, computed values. These values include vibrational energy, infrared intensity, degeneracy, Einstein A coefficient, Einstein B coefficient, Planck Distribution and the Einstein B coefficient multiplied by the Planck Distribution. 
+ - no_RRKM. 
+    Boolean.Set to true to prevent the program from computing RRKM dissociation rate constants.
 
- - save_initial_condition. Boolean. Set to true to save the initial condition as a .csv file. The file with have two columns. The first is the energy bins and the second is the abundance.
+ - save_modes. 
+    Boolean. Set to true to save vibrational modes and other associated, computed values. These values include vibrational energy, infrared intensity, degeneracy, Einstein A coefficient, Einstein B coefficient, Planck Distribution and the Einstein B coefficient multiplied by the Planck Distribution. 
 
- - save_boltzmann. Boolean. Set to true to save a Boltzmann distribution (based upon the blackbody field temperature) as a .csv file. The file with have two columns. The first is the energy bins and the second is the abundance.
+ - save_initial_condition. 
+    Boolean. Set to true to save the initial condition as a .csv file. The file with have two columns. The first is the energy bins and the second is the abundance.
 
- - save_eigenvalues. Boolean. Set to true to save the eigenvalues of the transport matrix as a .csv file. The file with have four columns. The first is the index, the second is the real component, the third is the imaginary component and the last is the magnitude. 
+ - save_boltzmann. 
+    Boolean. Set to true to save a Boltzmann distribution (based upon the blackbody field temperature) as a .csv file. The file with have two columns. The first is the energy bins and the second is the abundance.
 
- - save_time_data. Boolean. Set to true to save the time propagation data as a .csv file. The rows of the file correspond to each time point and the columns correspond to the energy bins. The first row is the values of the energy bins and the first column is the time for each point. 
+ - save_eigenvalues. 
+    Boolean. Set to true to save the eigenvalues of the transport matrix as a .csv file. The file with have four columns. The first is the index, the second is the real component, the third is the imaginary component and the last is the magnitude. 
+
+ - save_time_data. 
+    Boolean. Set to true to save the time propagation data as a .csv file. The rows of the file correspond to each time point and the columns correspond to the energy bins. The first row is the values of the energy bins and the first column is the time for each point. 
 
 ## Lua Libraries
 Loading .csv files for inputs to MEQ can be done with Lua. A file titled “csv.lua” is included with the source code of MEQ that includes functions for loading .csv files into 2D tables and slicing 2D tables into 1D tables. The functions are csv.load and csv_col/csv_row, respectively. These functions are imported using the dofile(filepath) function, which behaves essentially like import in Python.
