@@ -1,5 +1,5 @@
 -- require("io") -- uncomment to print stuff using "io.write()"
-dofile(config_directory .. "/../../../../lua_libraries/csv.lua")
+dofile(config_directory .. "/../../../../lua_libraries/csv.lua") -- string are concatenated in Lua with the ".." operator.
 
 e_min = 0 -- wavenumber
 e_max = 20000
@@ -11,7 +11,7 @@ t_step = 0.001
 
 temperature = 120 + 273.15 -- kelvin
 
-modes = csv.load(config_directory .. "/vibrations.csv", ",", true)
+modes = csv.load(config_directory .. "/../../vibrations.csv", ",", true)
 
 vib_modes = csv_col(modes, 1) -- wavenumber
 ir_intens = csv_col(modes, 2) -- km/mol

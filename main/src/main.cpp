@@ -322,7 +322,7 @@ int main(int argc, char** argv) {
         std::cout << "\nTransport matrix parameters:\n";
         std::cout << std::format("Energy bins min, max, step: {:d} cm^-1, {:d} cm^-1, {:d} cm^-1\n", e_min, e_max, e_step);
         std::cout << std::format("Blackbody field temperature: {:.2f} K\n", temperature);
-        std::cout << std::format("\nActivation energy: {:d} cm^-1. Transport matrix RRKM rate constants are {}.\n", e0, no_RRKM ? "disabled" : "enabled");
+        std::cout << std::format("Activation energy: {:d} cm^-1. Transport matrix RRKM rate constants are {}.\n", e0, no_RRKM ? "disabled" : "enabled");
         std::cout << std::format("Number of threads for populating the transport matrix: {:d}\n", number_of_threads);
 
         std::cout << "\nTime propagation:\n";

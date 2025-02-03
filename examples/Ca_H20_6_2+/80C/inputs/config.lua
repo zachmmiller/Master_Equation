@@ -1,5 +1,5 @@
 -- require("io") -- uncomment to print stuff using "io.write()"
-dofile(config_directory .. "/../../../../lua_libraries/csv.lua")
+dofile(config_directory .. "/../../../../lua_libraries/csv.lua") -- string are concatenated in Lua with the ".." operator.
 
 e_min = 0 -- wavenumber
 e_max = 20000

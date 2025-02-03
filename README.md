@@ -49,7 +49,7 @@ Below is a list of all required variables for running MEQ that have to be define
     Integer. Sets the number of threads used when populating the transport matrix.
 
  - no_RRKM. 
-    Boolean.Set to true to prevent the program from computing RRKM dissociation rate constants.
+    Boolean. Set to true to prevent the program from computing RRKM dissociation rate constants.
 
  - output_directory.
     String. Path to output folder.
@@ -83,7 +83,7 @@ Loading .csv files for inputs can be done with Lua. A file titled “csv.lua” 
 Note on loading .csv files: The file must be formatted such that there is a new line character (“\n”) after the last column of the last row. If that new line character is not there, you will get this error: "attempt to perform arithmetic on a nil value (local 'e')". To fix this, just open the .csv file in a plain text editor, press return on the last line, save and rerun MEQ.
 
 ## Additional symbols for scripting
-Lua does not contain a library for file system related tasks out of the box, so things like the current working directory and the directory of the config file are not easily accessible. To get around this, C++ defines these two variables at run time before the config file is run and they can be accessed as config_directory and current_working_directory in the config file. See examples for more detail. By 
+Lua does not contain a library for file system related tasks out of the box, so things like the current working directory and the directory of the config file are not easily accessible. To get around this, C++ defines these two variables at run time before the config file is run and they can be accessed as config_directory and current_working_directory in the config file. See examples for more detail.
 
 ## Python Libraries
 
