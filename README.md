@@ -79,19 +79,46 @@ Lua does not contain a library for file system related tasks out of the box, so 
 There are currently two scripts in the python_libraries directory. The first is importing.py, which provides some functions for plotting the outputs of this program and the second is rebin.py, which is a short script that will rebin a distribution given in eV (or any other unit of energy) to a distribution in wavenumber.
 
  - importing.py. There are functions three functions for loading saved time data, boltzmann distributions and initial conditions. All functions take one parameter, which is the folder that the saved data is in.
-    - get_time_data loads in saved time propagation data and returns three numpy.ndarrays. The first is time (1D array), the second is energy (1D array) and the third is the abundance (2D array, first dimension is time and the second is energy).
-    - get_boltzmann loads in a saved boltzmann distribution and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
-    - get_initial_condition loads in a saved initial condition and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
+   - get_time_data loads in saved time propagation data and returns three numpy.ndarrays. The first is time (1D array), the second is energy (1D array) and the third is the abundance (2D array, first dimension is time and the second is energy).
+   - get_boltzmann loads in a saved boltzmann distribution and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
+   - get_initial_condition loads in a saved initial condition and returns two numpy.ndarrays. The first is energy (1D array) and the second is abundance (1D array).
 
- - rebin.py. This is a script meant to be run from the command line. It takes 7 arguments and is used to  
+ - rebin.py. This is a script meant to be run from the command line. It takes 7 arguments and is used to rebin distributions for use with MEQ. The arguments are:
+   - "-min". Integer. Required. Sets the energy minumum for binning in wavenumber.
+   - "-max". Integer. Required. Sets the energy maximum for binning in wavenunumber.
+   - "-step". Integer. Required. Sets the energy step for binning in wavenumber.
+   - "-mult". Float. Optional. Default=8065.544 (converts eV to wavenumber). Sets the conversion factor for input energy units to wavenunumber.
+   - "-input". String. Required. File path to input data. Must be a two column .csv file. First column is energy and the second is abundance.
+   - "-output". String. Required. File path for output. 
+   - "-header". Boolean. Optional. Default=True. Set to false if the first row of the input is not a header. Keep as true if the first row is a header.
+
+   How it works: The input distribution is first converted to wavenumber and then the CubicSpline class from scipy.interpolate is used to rebin the distribution in evenly spaced wavenumber bins. Note that renormalization is not performed here, but MEQ will renormalize the initial condition. 
 
 ## Examples
 
-There are 10 examples configurations of the program in the examples directory that   
+There are 10 examples configurations of the program in the examples directory that go over various ways of running the MEQ with Calcium Hexahydrate 2+ as a test system:
+ - 80C 
+ - 90C
+ - 100C
+ - 110C
+ - 120C
+ - 200C
+   - Simulates the dissociation rate of Ca(H2O)6 2+ at different temperatures. The initial population is defined by a boltzmann distribution.
+
+ - cooling_1
+   - Simulates cooling of Ca(H2O)6 2+ from 200C to 50C by starting the population as a 200C Boltzmann distribution.
+    
+ - cooling_2
+   - Simulates cooling of Ca(H2O)6 2+ from 200C to 50C by starting the population as a 200C depleted Boltzmann distribution from the 200C simulation above (you must run 200C before this one for this one to work). 
+
+ - cooling_3
+    - Simulates cooling of Ca(H2O)6 2+ from 200C to 50C by starting the population as a 200C Boltzmann distribution. RRKM rate constants are not computed for this one.
+
+ - boltzmann_comparison
+   - Simulates Ca(H2O)6 2+ at 400C without dissociation for comparison to Boltzmann distribution. 
 
 
 # Compiling
 It should be more or less straightforward to compile MEQ on any system if you have a C++ compiler that supports C++20 (GCC 9, Clang 14 or MSVC 16 / VS2019). Once you have a compiler that supports C++20, the program is ready to build. You have a choice of using GNU make (makefiles are provided) or any other build system supported by premake5. Premake5 is a project file generator for building C/C++ code. Premake will generate makefiles or a visual studio build files by calling “premake5 gmake” or “premake5 vs2022”, respectively in the base directory of the source code. To compile with make, just type “make config=release” in the base directory and the C/C++ compiler should do the rest and put an executable in the bin directory. As of right now, compilation has been tested on Mac, Windows and Linux with LLVM Clang++, but GCC or MSVC should work without a problem. To request gcc for example, just change "toolset" in premake5.lua from "clang" to "gcc" and regenerate the build files.
-
 
 
