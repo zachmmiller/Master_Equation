@@ -335,7 +335,7 @@ int main(int argc, char** argv) {
         std::cout << std::format("Initial condition: {}\n", save_initial_condition ? "yes" : "no");
         std::cout << std::format("Boltzmann (T={:.2f} K): {}\n", temperature, save_boltzmann ? "yes" : "no");
         std::cout << std::format("Eigenvalues: {}\n", save_eigenvalues ? "yes" : "no");
-        std::cout << std::format("Time propagation: {}\n", save_time_data ? "yes" : "no");
+        std::cout << std::format("Time propagation: {}\n\n", save_time_data ? "yes" : "no");
     }
 
     if (save_modes) {
