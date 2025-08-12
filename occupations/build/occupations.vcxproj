@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8D0B16ED-F9C0-8EE2-82B5-88B9EE6985E6}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>occupations</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>ClangCL</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>ClangCL</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>obj\Debug\</IntDir>
+    <TargetName>occ-d</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>obj\Release\</IntDir>
+    <TargetName>occ</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalOptions>-Wall -march=native -DDEBUG -g %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalOptions>-Wall -march=native -DRELEASE -O3 -Wno-deprecated-anon-enum-enum-conversion %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\math\formulas.cpp" />
+    <ClCompile Include="..\..\math\master_equation.cpp" />
+    <ClCompile Include="..\..\math\states.cpp" />
+    <ClCompile Include="..\..\tools\Argument_Parsing.cpp" />
+    <ClCompile Include="..\..\tools\ThreadPool.cpp" />
+    <ClCompile Include="..\..\tools\config.cpp" />
+    <ClCompile Include="..\..\tools\exporting.cpp" />
+    <ClCompile Include="..\..\vendor\Lua\src\lapi.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lauxlib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lbaselib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lcode.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lcorolib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lctype.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ldblib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ldebug.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ldo.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ldump.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lfunc.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lgc.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\linit.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\liolib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\llex.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lmathlib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lmem.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\loadlib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lobject.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lopcodes.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\loslib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lparser.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lstate.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lstring.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lstrlib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ltable.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ltablib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\ltm.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lundump.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lutf8lib.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lvm.c" />
+    <ClCompile Include="..\..\vendor\Lua\src\lzio.c" />
+    <ClCompile Include="..\src\main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

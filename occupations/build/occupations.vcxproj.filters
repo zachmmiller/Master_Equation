@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\math">
+      <UniqueIdentifier>{FAC59347-66A5-12E3-6FBD-9DB9DB1B7944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\tools">
+      <UniqueIdentifier>{C1C9923A-AD96-ED45-D6AF-DBEDC2DB22D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\vendor">
+      <UniqueIdentifier>{9EAFE090-0A1A-9507-5358-46ADBF01735C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\vendor\Lua">
+      <UniqueIdentifier>{2F67E66A-9B27-62A1-6462-AB1ED0E1A67D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\vendor\Lua\src">
+      <UniqueIdentifier>{C62430B9-323B-2E4F-7BB2-B970E707FFD6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\math\formulas.cpp">
+      <Filter>..\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\master_equation.cpp">
+      <Filter>..\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\states.cpp">
+      <Filter>..\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\Argument_Parsing.cpp">
+      <Filter>..\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\ThreadPool.cpp">
+      <Filter>..\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\config.cpp">
+      <Filter>..\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\exporting.cpp">
+      <Filter>..\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lapi.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lauxlib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lbaselib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lcode.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lcorolib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lctype.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ldblib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ldebug.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ldo.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ldump.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lfunc.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lgc.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\linit.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\liolib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\llex.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lmathlib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lmem.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\loadlib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lobject.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lopcodes.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\loslib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lparser.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lstate.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lstring.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lstrlib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ltable.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ltablib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\ltm.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lundump.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lutf8lib.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lvm.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\Lua\src\lzio.c">
+      <Filter>..\vendor\Lua\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
