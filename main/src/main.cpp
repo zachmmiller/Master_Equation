@@ -530,6 +530,8 @@ int main(int argc, char** argv) {
         bar.End();
     }
 
+    std::cout << "J Matrix:\n" << J.block(0, 0, 10, 10) << "\n" << std::endl;
+
     {
         std::cout << "Solving for transport matrix eigenvalues / eigenvectors..." << std::endl;
         Timer timer("Took");

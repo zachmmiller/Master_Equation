@@ -13,9 +13,9 @@ temperature = 100 + 273.15 -- kelvin
 
 modes = csv.load(config_directory .. "/../../vibrations.csv", ",", true)
 
-vib_modes = csv_col(modes, 1) -- wavenumber
-ir_intens = csv_col(modes, 2) -- km/mol
-vib_degen = csv_col(modes, 3) -- count
+vib_modes = {2, 3, 9} -- wavenumber
+ir_intens = {1, 1, 1} -- km/mol
+vib_degen = {1, 1, 1} -- count
 
 TS_vib_modes = csv_col(modes, 1)
 TS_vib_degen = csv_col(modes, 3)
@@ -49,10 +49,10 @@ TS_vib_degen[TS_state_mode_index] = TS_vib_degen[TS_state_mode_index]-1
 vib_mode_scalar = 0.98
 ir_intens_scalar = 1.0
 
-for i, v in ipairs(vib_modes)
-  do
-  vib_modes[i] = v * vib_mode_scalar
-  end
+-- for i, v in ipairs(vib_modes)
+--   do
+--   vib_modes[i] = v * vib_mode_scalar
+--   end
 
 for i, v in ipairs(TS_vib_modes)
   do TS_vib_modes[i] = v * vib_mode_scalar

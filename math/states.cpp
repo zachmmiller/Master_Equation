@@ -7,6 +7,7 @@
 #include <format>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "formulas.h"
 
@@ -41,11 +42,12 @@ Occupation::Occupation(Vibrational_Modes* modes, long int energy) {
     bounds = new int[N];
     int size = 0;
     for (long int i = 0; i < N; i++) {
-        bounds[i] = (energy / modes->C[i]) + 4;
+        bounds[i] = (energy / modes->C[i]) + 1;
         size += bounds[i];
     }
     O = new double[size];
     std::fill(O, O + size, 0);
+    this->energy = energy;
 }
 
 Occupation::~Occupation() {
@@ -73,12 +75,46 @@ void Occupation::print() {
         mode = (*this)[i];
         std::cout << "Mode " << i << " occupation:" << std::endl;
         for (int j = 0; j < bounds[i]; j++) {
-            std::cout << "level: " << j << ", occupation: " << mode[j] << std::endl;
+            std::cout << "Level: " << j << ", occupation: " << mode[j] << ", probability: " << mode[j]/density_of_states << std::endl;
         }
     }
 }
 
-void Occupation_Density(Vibrational_Modes* modes, Occupation* occupation, long int energy) {
+void Occupation::print(Vibrational_Modes* modes) {
+    double* mode;
+    std::cout << std::format("{:<20} {:15d}\n{:<20} {:15.8f}\n\n", "Energy (cm^-1):", energy, "Density of states:", density_of_states);
+    std::string out_str;
+    out_str += std::format("{:>20} | {:>20} | {:>20} | {:>20} | {:>20}\n", "Mode (cm^-1)", "Degeneracy", "Level", "Occupation", "Probability");
+    for (int i = 0; i < N; i++) {
+        mode = (*this)[i];
+        for (int j = 0; j < bounds[i]; j++) {
+            out_str += std::format("{:20d} | {:20d} | {:20d} | {:20.8f} | {:20.8f}\n", modes->C[i], modes->D[i], j, mode[j], mode[j]/density_of_states);
+        }
+        out_str += "\n";
+        std::cout << out_str;
+        out_str.clear();
+    }
+}
+
+void Occupation::save(fs::path path, Vibrational_Modes* modes){
+    double* mode;
+    std::ofstream out_file;
+    out_file.open(path);
+    out_file << std::format("{:<20} {:15d}\n{:<20} {:15.8e}\n\n", "Energy (cm^-1):", energy, "Density of states:", density_of_states);
+    std::string out_str;
+    out_str += std::format("{:>20}, {:>20}, {:>20}, {:>20}, {:>20}\n", "Mode (cm^-1)", "Degeneracy", "Level", "Occupation", "Probability");
+    for (int i = 0; i < N; i++) {
+        mode = (*this)[i];
+        for (int j = 0; j < bounds[i]; j++) {
+            out_str += std::format("{:20d}, {:20d}, {:20d}, {:20.8e}, {:20.8e}\n", modes->C[i], modes->D[i], j, mode[j], mode[j]/density_of_states);
+        }
+        out_str += "\n";
+        out_file << out_str;
+        out_str.clear();
+    }
+}
+
+void Occupation_Density(Vibrational_Modes* modes, Occupation* occupation, long int energy, double min_occupation) {
     energy++;
     double* density = new double[energy];
     std::fill(density, density + energy, 0);

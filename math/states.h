@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 struct Vibrational_Modes {
     Vibrational_Modes(int* vib_modes, int* vib_degen, double* ir_intens, double temperature, int N);
@@ -25,15 +28,18 @@ struct Occupation {
     int offset(int index);
     double* operator[](int index);
     void print();
+    void print(Vibrational_Modes* modes);
+    void save(fs::path path, Vibrational_Modes* modes);
     double density_of_states;
     double* O;
     int* bounds;
     int N;
+    long int energy;
 };
 
 double Planck_Distribution(double wavenumber, double temperature);
 
-void Occupation_Density(Vibrational_Modes* modes, Occupation* occupation, long int energy);
+void Occupation_Density(Vibrational_Modes* modes, Occupation* occupation, long int energy, double min_occupation=0);
 void Beyer_Swinehart(int* C, int* D, int N, double* density, long int energy, long int eliminate_energy);
 
 double Density_of_States(int* C, int* D, int N, long int energy);

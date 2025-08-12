@@ -20,7 +20,8 @@ void J_Column_Blackbody(Vibrational_Modes* modes, int e_min, int e_step, double*
                 if (energy_diff - (double)e_step / 2 <= (double)modes->C[i] && (double)modes->C[i] < energy_diff + (double)e_step / 2) {
                     if (occupations.density_of_states == 0) {
                         // This means that everything is in the ground state.
-                        *element += modes->P[i] * modes->B[i] * modes->D[i];
+                        // 7-29-25 Correction: It means that this state is not accessible. The rate constant should be zero!
+                        // *element += modes->P[i] * modes->B[i] * modes->D[i];
                     } else {
                         for (int j = 0; j < occupations.bounds[i]; j++) {
                             probability = occupations[i][j] / occupations.density_of_states;

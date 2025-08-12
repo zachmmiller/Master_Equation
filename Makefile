@@ -10,12 +10,14 @@ endif
 
 ifeq ($(config),debug)
   main_config = debug
+  occupations_config = debug
 endif
 ifeq ($(config),release)
   main_config = release
+  occupations_config = release
 endif
 
-PROJECTS := main
+PROJECTS := main occupations
 
 .PHONY: all clean help $(PROJECTS) 
 
@@ -24,11 +26,18 @@ all: $(PROJECTS)
 main:
 ifneq (,$(main_config))
 	@echo "==== Building main ($(main_config)) ===="
-	@${MAKE} --no-print-directory -C main/build -f Makefile config=$(main_config)
+	@${MAKE} --no-print-directory -C main/build -f main.make config=$(main_config)
+endif
+
+occupations:
+ifneq (,$(occupations_config))
+	@echo "==== Building occupations ($(occupations_config)) ===="
+	@${MAKE} --no-print-directory -C main/build -f occupations.make config=$(occupations_config)
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C main/build -f Makefile clean
+	@${MAKE} --no-print-directory -C main/build -f main.make clean
+	@${MAKE} --no-print-directory -C main/build -f occupations.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -41,5 +50,6 @@ help:
 	@echo "   all (default)"
 	@echo "   clean"
 	@echo "   main"
+	@echo "   occupations"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

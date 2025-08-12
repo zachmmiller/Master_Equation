@@ -2,8 +2,8 @@
 dofile(config_directory .. "/../../../../lua_libraries/csv.lua") -- string are concatenated in Lua with the ".." operator.
 
 e_min = 0 -- wavenumber
-e_max = 20000
-e_step = 20
+e_max = 500
+e_step = 10
 
 t_min = 0 -- seconds
 t_max = 2
@@ -17,6 +17,11 @@ vib_modes = csv_col(modes, 1) -- wavenumber
 ir_intens = csv_col(modes, 2) -- km/mol
 vib_degen = csv_col(modes, 3) -- count
 
+for i, v in ipairs(vib_degen)
+  do vib_degen[i] = 1
+  end
+
+
 TS_vib_modes = csv_col(modes, 1)
 TS_vib_degen = csv_col(modes, 3)
 
@@ -26,7 +31,7 @@ initially_boltzmann = true
 initial_temperature = temperature
 initial_integral_abundance = 1 -- Sum of all abundance
 
-no_RRKM = false
+no_RRKM = true
 
 save_modes = true
 save_initial_condition = true
@@ -36,7 +41,7 @@ save_time_data = true
 
 output_directory = config_directory .. "/../outputs"
 
-number_of_threads = 8
+number_of_threads = 1
 
 -- Scripting
 
@@ -49,10 +54,10 @@ TS_vib_degen[TS_state_mode_index] = TS_vib_degen[TS_state_mode_index]-1
 vib_mode_scalar = 0.98
 ir_intens_scalar = 1.0
 
-for i, v in ipairs(vib_modes)
-  do
-  vib_modes[i] = v * vib_mode_scalar
-  end
+-- for i, v in ipairs(vib_modes)
+--   do
+--   vib_modes[i] = v * vib_mode_scalar
+--   end
 
 for i, v in ipairs(TS_vib_modes)
   do TS_vib_modes[i] = v * vib_mode_scalar
