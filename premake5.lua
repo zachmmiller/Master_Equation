@@ -37,7 +37,7 @@ removefiles {}
 libdirs {}
 links {}
 -- linkoptions{"-framework Accelerate", "/opt/local/lib/lapack/liblapacke.dylib"} -- Apple specific
-location "main/build"
+location "occupations/build"
 -- buildoptions{"-DACCELERATE_NEW_LAPACK"} -- Apple specific
 
 filter {"configurations:Debug"}
